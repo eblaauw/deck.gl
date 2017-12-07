@@ -134,6 +134,7 @@ export function getUniformsFromViewport({
   modelMatrix = null,
   coordinateSystem = COORDINATE_SYSTEM.LNGLAT,
   coordinateOrigin = [0, 0],
+  fp64 = false,
   // Deprecated
   projectionMode,
   positionOrigin
@@ -169,10 +170,19 @@ export function getUniformsFromViewport({
   const glModelMatrix = new Float32Array(modelMatrix || IDENTITY_MATRIX);
   const glViewProjectionMatrix = new Float32Array(viewProjectionMatrix);
 
-  const glViewProjectionMatrixFP64 = fp64ifyMatrix4(viewProjectionMatrix);
-  const scaleFP64 = fp64ify(viewport.scale);
+  let fp64Uniforms;
+  if (fp64) {
+    const glViewProjectionMatrixFP64 = fp64ifyMatrix4(viewProjectionMatrix);
+    const scaleFP64 = fp64ify(viewport.scale);
+    fp64Uniforms = {
+      project64_uViewProjectionMatrix: glViewProjectionMatrixFP64,
+      project64_uScale: scaleFP64,
+      projectionFP64: glViewProjectionMatrixFP64,
+      projectionScaleFP64: scaleFP64
+    };
+  }
 
-  return {
+  return Object.assign({
     // Projection mode values
     project_uCoordinateSystem: coordinateSystem,
     project_uCenter: projectionCenter,
@@ -195,8 +205,8 @@ export function getUniformsFromViewport({
     // This is for lighting calculations
     project_uCameraPosition: new Float32Array(cameraPos),
 
-    project64_uViewProjectionMatrix: glViewProjectionMatrixFP64,
-    project64_uScale: scaleFP64,
+    // project64_uViewProjectionMatrix: glViewProjectionMatrixFP64,
+    // project64_uScale: scaleFP64,
 
     //
     // DEPRECATED UNIFORMS - For backwards compatibility with old custom layers
@@ -212,9 +222,8 @@ export function getUniformsFromViewport({
     projectionScale: viewport.scale, // This is the mercator scale (2 ** zoom)
     viewportSize,
     devicePixelRatio,
-    cameraPos: new Float32Array(cameraPos),
-
-    projectionFP64: glViewProjectionMatrixFP64,
-    projectionScaleFP64: scaleFP64
-  };
+    cameraPos: new Float32Array(cameraPos)
+    // projectionFP64: glViewProjectionMatrixFP64,
+    // projectionScaleFP64: scaleFP64
+  }, fp64Uniforms);
 }

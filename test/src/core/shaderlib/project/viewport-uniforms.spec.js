@@ -58,8 +58,10 @@ const UNIFORMS = {
   project_uViewProjectionMatrixFP64: Array,
 
   // This is for lighting calculations
-  project_uCameraPosition: Array,
+  project_uCameraPosition: Array
+};
 
+const UNIFORMS_64 = {
   project64_uViewProjectionMatrix: Array,
   project64_uScale: Number
 };
@@ -77,8 +79,10 @@ const DEPRECATED_UNIFORMS = {
   projectionScale: Number, // This is the mercator scale (2 ** zoom)
   viewportSize: Array,
   devicePixelRatio: Number,
-  cameraPos: Array,
+  cameraPos: Array
+};
 
+const DEPRECATED_UNIFORMS_64 = {
   projectionFP64: Array,
   projectionScaleFP64: Array
 };
@@ -98,6 +102,14 @@ test('project#getUniformsFromViewport#shader module style uniforms', t => {
   for (const uniform in UNIFORMS) {
     t.ok(uniforms[uniform] !== undefined, `Returned ${uniform}`);
   }
+  for (const uniform in UNIFORMS_64) {
+    t.ok(uniforms[uniform] === undefined, `Should not return ${uniform}`);
+  }
+
+  uniforms = getUniformsFromViewport({viewport, fp64: true});
+  for (const uniform in UNIFORMS_64) {
+    t.ok(uniforms[uniform] !== undefined, `Return ${uniform}`);
+  }
 
   uniforms = getUniformsFromViewport({
     viewport,
@@ -116,6 +128,14 @@ test('preoject#getUniformsFromViewport#deprecated uniforms', t => {
 
   for (const uniform in DEPRECATED_UNIFORMS) {
     t.ok(uniforms[uniform] !== undefined, `Returned deprecated ${uniform}`);
+  }
+  for (const uniform in DEPRECATED_UNIFORMS_64) {
+    t.ok(uniforms[uniform] === undefined, `Should not return deprecated ${uniform}`);
+  }
+
+  uniforms = getUniformsFromViewport({viewport, fp64: true});
+  for (const uniform in DEPRECATED_UNIFORMS_64) {
+    t.ok(uniforms[uniform] !== undefined, `Return deprecated ${uniform}`);
   }
 
   t.ok(uniforms.devicePixelRatio > 0, 'Returned devicePixelRatio');
