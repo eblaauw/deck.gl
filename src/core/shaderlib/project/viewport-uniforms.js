@@ -170,6 +170,7 @@ export function getUniformsFromViewport({
   const glModelMatrix = new Float32Array(modelMatrix || IDENTITY_MATRIX);
   const glViewProjectionMatrix = new Float32Array(viewProjectionMatrix);
 
+  // 64 bit support
   let fp64Uniforms;
   if (fp64) {
     const glViewProjectionMatrixFP64 = fp64ifyMatrix4(viewProjectionMatrix);
@@ -178,6 +179,8 @@ export function getUniformsFromViewport({
       project_uViewProjectionMatrixFP64: glViewProjectionMatrixFP64,
       project64_uViewProjectionMatrix: glViewProjectionMatrixFP64,
       project64_uScale: scaleFP64,
+
+      // DEPRECATED UNIFORMS - For backwards compatibility with old custom layers
       projectionFP64: glViewProjectionMatrixFP64,
       projectionScaleFP64: scaleFP64
     };
@@ -203,9 +206,6 @@ export function getUniformsFromViewport({
     // This is for lighting calculations
     project_uCameraPosition: new Float32Array(cameraPos),
 
-    // project64_uViewProjectionMatrix: glViewProjectionMatrixFP64,
-    // project64_uScale: scaleFP64,
-
     //
     // DEPRECATED UNIFORMS - For backwards compatibility with old custom layers
     //
@@ -221,7 +221,5 @@ export function getUniformsFromViewport({
     viewportSize,
     devicePixelRatio,
     cameraPos: new Float32Array(cameraPos)
-    // projectionFP64: glViewProjectionMatrixFP64,
-    // projectionScaleFP64: scaleFP64
   }, fp64Uniforms);
 }
