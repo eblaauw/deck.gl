@@ -54,14 +54,13 @@ const UNIFORMS = {
   project_uModelMatrix: Array,
   project_uViewProjectionMatrix: Array,
 
-  // 64 bit support
-  project_uViewProjectionMatrixFP64: Array,
-
   // This is for lighting calculations
   project_uCameraPosition: Array
 };
 
+// 64 bit support
 const UNIFORMS_64 = {
+  project_uViewProjectionMatrixFP64: Array,
   project64_uViewProjectionMatrix: Array,
   project64_uScale: Number
 };

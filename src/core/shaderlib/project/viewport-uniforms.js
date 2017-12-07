@@ -175,6 +175,7 @@ export function getUniformsFromViewport({
     const glViewProjectionMatrixFP64 = fp64ifyMatrix4(viewProjectionMatrix);
     const scaleFP64 = fp64ify(viewport.scale);
     fp64Uniforms = {
+      project_uViewProjectionMatrixFP64: glViewProjectionMatrixFP64,
       project64_uViewProjectionMatrix: glViewProjectionMatrixFP64,
       project64_uScale: scaleFP64,
       projectionFP64: glViewProjectionMatrixFP64,
@@ -198,9 +199,6 @@ export function getUniformsFromViewport({
 
     project_uModelMatrix: glModelMatrix,
     project_uViewProjectionMatrix: glViewProjectionMatrix,
-
-    // 64 bit support
-    project_uViewProjectionMatrixFP64: fp64ifyMatrix4(viewProjectionMatrix),
 
     // This is for lighting calculations
     project_uCameraPosition: new Float32Array(cameraPos),
